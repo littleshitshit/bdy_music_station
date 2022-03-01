@@ -130,7 +130,7 @@ exports.getSongComments = (req, res) => {
     db.query(sql, (err, rows) => {
         if (err) return res.cc(err)
         if (rows.length === 0) return res.cc("获取歌曲评论失败")
-        if(rows[0].username===null) return res.cc("评论为空")
+        // if(rows[0].username===null) return res.cc("评论为空")
         res.succ({rows})
     })
 }

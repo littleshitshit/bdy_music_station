@@ -58,12 +58,20 @@ exports.userinfo = (req, res) => {
 //-------------更新用户名
 //更新用户名
 exports.updateUsername = (req, res) => {
-    const sql = "update user set ? where user_id=?"
-    db.query(sql, [req.body, req.user.user_id], (err, rows) => {
+    console.log(req.body.username);
+    const sql = "select * from user where username=?"
+    db.query(sql, req.body.username, (err, rows) => {
+        //错误处理
         if (err) return res.cc(err)
-        if (rows.affectedRows != 1) return res.cc("更新用户名失败")
-        res.succ({}, "更新成功")
+        if (rows.length > 0) return res.cc("用户名已经被注册了")
+        const sql = "update user set ? where user_id=?"
+        db.query(sql, [req.body, req.user.user_id], (err, rows) =>  {
+            if (err) return res.cc(err)
+            if (rows.affectedRows != 1) return res.cc("更新用户名失败")
+            res.succ({}, "更新成功")
+        })
     })
+
 }
 //--------------更新用户密码
 exports.updateUserpwd = (req, res) => {
@@ -131,7 +139,7 @@ exports.yes_like = (req, res) => {
             let user_like_arr = [...new Set(user_like_string.split(','))]
             new_user_like_string = user_like_arr.join(',');
         }
-       
+
         //更新用户的user_like
         const sql = `update user set user_like='${new_user_like_string}' where user_id=${req.user.user_id}`
         db.query(sql, (err, rows) => {

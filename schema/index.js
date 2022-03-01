@@ -24,6 +24,7 @@ exports.userLogin = {
   }
 
 }
+
 // -----------------更新信息验证规则
 exports.updateUserSchema = {
   body: {
